@@ -7,10 +7,11 @@ library("jsonlite")
 
 # Use `source()` to load your API key variable from the `apikey.R` file you made.
 # Make sure you've set your working directory!
-
+source("apikey.R")
+key_param <- list("api-key" = nyt_key)
 
 # Create a variable `movie_name` that is the name of a movie of your choice.
-
+movie_name <- "Parasite"
 
 # Construct an HTTP request to search for reviews for the given movie.
 # The base URI is `https://api.nytimes.com/svc/movies/v2/`
@@ -20,14 +21,22 @@ library("jsonlite")
 #
 # You should use YOUR api key (as the `api-key` parameter)
 # and your `movie_name` variable as the search query!
+base_url <- "https://api.nytimes.com/svc/movies/v2/"
+endpoint <- "reviews/search.json"
+uri <- paste0(base_url, endpoint)
 
+query_params_list <- list("api-key" = nyt_key, "movie_name" = movie_name)
 
 # Send the HTTP Request to download the data
 # Extract the content and convert it from JSON
-
+response <- GET(uri, query = query_params_list)
+body <- content(response, "text", encoding = "UTF-8")
+data <- fromJSON(body)
 
 # What kind of data structure did this produce? A data frame? A list?
-
+is.data.frame(data)
+is.list(data)
+#It's a list
 
 # Manually inspect the returned data and identify the content of interest 
 # (which are the movie reviews).
